@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while getopts "s:f:" OPTION
+while getopts "s:f:i:" OPTION
 do
 	case $OPTION in
 		s)
@@ -11,10 +11,16 @@ do
 			echo The value of -f is $OPTARG
 			endsnap=$OPTARG
 			;;
+		i)
+			echo The value of -i is $OPTARG
+			timeinterval=$OPTARG
+			;;
 	esac
 done
 until [ $startsnap -gt $endsnap ]; do
-	g_dist -s md-tr2.tpr -f conf${startsnap}.gro -n index.ndx -o dist${startsnap}.xvg < groups.txt &>/dev/null
-	let startsnap=startsnap+1
+	g_dist -s pull-25.tpr -f conf${startsnap}.gro -n index.ndx -o dist${startsnap}.xvg < groups.txt &>/dev/null
+	awk '/^[^@#]/ {print $1 " " $2}' dist${startsnap}.xvg >> summary-distances.dat
+	rm dist${startsnap}.xvg
+	let startsnap=$startsnap+$timeinterval
 done
 echo Hooray! Finished!

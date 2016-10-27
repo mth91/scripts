@@ -1,1 +1,3 @@
 # scripts
+
+Repository for certain scripts. Furhter information coming soon...
